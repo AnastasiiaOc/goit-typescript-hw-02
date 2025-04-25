@@ -1,0 +1,14 @@
+.loadMore{
+ 
+    display:flex;
+     margin:0 auto;
+     padding: 10px;
+     padding-left:20px;
+     padding-right:20px;
+     text-align: center;
+     /* font-family: Georgia, serif; */
+     font-size:16px;
+     border:none;
+     border-radius:5px;
+     background-color: rgb(178, 210, 235);
+}

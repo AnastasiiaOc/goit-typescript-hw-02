@@ -10,15 +10,6 @@ import ImageModal from '../ImageModal/ImageModal'
 import './App.css'
 import { Params, Image } from '../../image'
 
-
-// interface Params {
-//   isOpen: boolean;
-//   url: string;
-//   alt :string;
-// };
-
-
-
 function App() {
 
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -26,7 +17,8 @@ function App() {
   const [error, setError] = useState<boolean | string>(false);
   const [page, setPage] = useState<number>(1);
   const [showLoadMore, setShowLoadMore] = useState<boolean>(false);
-  const [images, setImages] = useState<string[]>([]);
+  // const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const [modalParams, setModalParams] = useState<Params>({
     isOpen: false,
     url: "",
@@ -39,11 +31,11 @@ useEffect(() =>{
   if (searchQuery === ""){
     return;
   }
-  async function fetchData() {
+  async function fetchData(): Promise<void> {
     try {
       setIsLoading(true);
       setError(false);
-      const { results, totalPages } = await getPhotos(searchQuery, page); // from API
+      const { results, totalPages } = await getPhotos(searchQuery, page); 
       console.log({results})
       if (results.length === 0) {
         setError("There are no images matching your query");
@@ -53,10 +45,9 @@ useEffect(() =>{
     
  } 
 
-  catch (error) {
+  catch (error: any) {
     setError(error.message);
-      // setError(error.message);
-      // setError(" Whoops, an error occured. Try to reload the page");
+      // setError(true);
      
     }
      finally {
@@ -80,7 +71,7 @@ function handleLoadMore():void {
 }
 
 
-function openModal(image:Image):void {
+function openModal(image:Image) {
   setModalParams({
     isOpen: true,
     url: image.urls.regular,
@@ -95,9 +86,10 @@ function closeModal() {
     <>
 
 <SearchBar onSearch={handleSearch} />
-      {error && <ErrorMessage error={error} />}
+      {error && <ErrorMessage/>}
+      {/* {error && <ErrorMessage error={error} />} */}
       {images.length > 0 && (
-        <ImageGallery images={images} onClick={openModal}></ImageGallery>
+        <ImageGallery images={images} onPictureClick={openModal}></ImageGallery>
       )}
      {isLoading && <Loader />}
      {images.length > 0 && !isLoading && showLoadMore && (

@@ -1,38 +1,45 @@
 import toast, { Toaster } from "react-hot-toast";
 import css from "./SearchBar.module.css";
-import React, { FormEvent } from 'react';
+import React, { FormEvent, ChangeEvent} from 'react';
 import { FC } from "react";
+import { useState } from "react";
 
 
 type SearchBarProps = {
   onSearch: (query: string) => void;
 };
 const SearchBar: FC<SearchBarProps> =({ onSearch }) => {
+
+  const [query, setQuery] = useState<string>("");
+
   function handleSubmit(evt: FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    // const query = evt.target.elements.search.value.trim();
-    const target = evt.target as HTMLFormElement;
-    const query = (
-      target.elements.namedItem("query") as HTMLInputElement
-    ).value.trim();
 
+    // const query = evt.target.elements.search.value.trim();
+    // query === "" ? toast.error("Search query cannot be empty!"): onSearch(query);
+    // evt.target.reset();
     if (query.trim() === "") {
-      toast.error("Search query cannot be empty!");
+      toast.error("Search query cannot be empty!")
       return;
     }
-    // query.trim() === "" ? toast.error("Search query cannot be empty!"): onSearch(query);
-    // evt.target.reset();
     onSearch(query);
-    if (target instanceof HTMLFormElement) {
-      target.reset();
-    }
-  }
+      if (evt.target instanceof HTMLFormElement) {
+        evt.target.reset();
+      }
+    // setQuery("");
+  };
+  const handleInput = (evt: ChangeEvent<HTMLInputElement>) => {
+    setQuery(evt.target.value);
+  };
+  
+  
 
   return (
     <header className={css.searchbar}>
       <Toaster />
       <form  onSubmit={handleSubmit} className={css.form}>
         <input className={css.input}
+          onChange={handleInput}
           type="text"
           autoComplete="off"
           autoFocus

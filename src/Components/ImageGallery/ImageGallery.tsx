@@ -4,16 +4,17 @@ import { Image } from "../../image";
 
 interface ImageGalleryProps {
   images:Image[];
-  onClick: () => void;
+  onImageClick: (image:Image) => void;
 }
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({images, onClick}) => {
+const ImageGallery: React.FC<ImageGalleryProps> = ({images, onImageClick}) => {
 
 return (<ul className={css.gallery}>
 	{images.map((image)=>{
 		return (
 		<li key = {image.id} className={css.galleryItem}>
-		<ImageCard image={image} onClick={onClick} />
+		{/* <ImageCard image={image} onClick={onImageClick} /> */}
+    <ImageCard image={image} onClick={() => onImageClick(image)} />
           </li>
         );
       })}

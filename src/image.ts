@@ -21,4 +21,7 @@ export interface Params {
   };
   
 
- 
+  export interface Photos{  // concerns return
+    results: Image[],
+    totalPages: number,
+  } 

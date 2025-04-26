@@ -8,7 +8,33 @@ import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn"
 import getPhotos from '../../unsplash-api'
 import ImageModal from '../ImageModal/ImageModal'
 import './App.css'
-import { Params, Image } from '../../image'
+import { Params, Image, Photos } from '../../image'
+
+// export interface Image{
+//   id: string;
+//   // id: number;
+//   urls: {
+//     small: string;
+//     regular: string;
+//   };
+//   alt_description: string;
+//   likes: number;
+//   user: {
+//     name: string;
+//   };
+// };
+
+// export interface Photos{  // concerns return
+//   results: string,
+//   totalPages: number,
+// } 
+  
+// export interface Params {
+//   isOpen: boolean;
+//   url: string;
+//   alt :string;
+// };
+
 
 function App() {
 
@@ -27,34 +53,41 @@ function App() {
 
 
 useEffect(() =>{
-
   if (searchQuery === ""){
     return;
   }
+
   async function fetchData(): Promise<void> {
     try {
       setIsLoading(true);
       setError(false);
-      const { results, totalPages } = await getPhotos(searchQuery, page); 
+      const {results, totalPages }:Photos= await getPhotos(searchQuery, page);
       console.log({results})
       if (results.length === 0) {
         setError("There are no images matching your query");
       }
       setImages((prevImages) => [...prevImages, ...results]);
       setShowLoadMore(totalPages > 1 && page !== totalPages);
-    
+      // ==================
+      // const results:Photos[] = await getPhotos(searchQuery, page);
+      //   if (results.length === 0) {
+      //   setError("There are no images matching your query");
+      // }
+      // setImages(prevImages => {
+      //   return [...prevImages, ...results];
+      // });  
+      //   setShowLoadMore(totalPages > 1 && page !== totalPages);
+   
  } 
-
-  catch (error: any) {
-    setError(error.message);
-      // setError(true);
+  catch (error) {
+    // setError(error.message);
+      setError(`Whoops an error occured: ${error}`);
      
     }
      finally {
       setIsLoading(false);
     }
   }
-
   fetchData();
 }, [searchQuery, page]);
 
@@ -79,23 +112,22 @@ function openModal(image:Image) {
   });
 }
 
-function closeModal() {
+
+function closeModal(): void {
   setModalParams({ isOpen: false, url: "", alt: "" });
 }
   return (
     <>
-
 <SearchBar onSearch={handleSearch} />
       {error && <ErrorMessage/>}
       {/* {error && <ErrorMessage error={error} />} */}
       {images.length > 0 && (
-        <ImageGallery images={images} onPictureClick={openModal}></ImageGallery>
+        <ImageGallery images={images} onImageClick={openModal}></ImageGallery>
       )}
      {isLoading && <Loader />}
      {images.length > 0 && !isLoading && showLoadMore && (
         <LoadMoreBtn onClick={handleLoadMore} />
       )}
-
  {modalParams.isOpen && (<ImageModal modalParams={modalParams} onClose={closeModal} /> )} 
       
   </>
@@ -222,3 +254,7 @@ export default App;
 //   // компонент UserProfile
 //   return null;
 // }
+
+// ==================================================
+
+

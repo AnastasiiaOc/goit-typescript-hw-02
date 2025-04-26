@@ -1,19 +1,25 @@
 import axios from "axios";
+import { Image } from "./image";
 
 axios.defaults.baseURL = "https://api.unsplash.com";
 
 const API_KEY = 'nvTchFPSMUWBBPhOuTNEzyZIhqFG5x--XI76MHD7Qqk';
 
 interface Photos{  // concerns return
-  results: string,
+  results: Image[],
   totalPages: number,
+}  
+interface UnsplashResponse{
+  results: Image[];
+  total_pages: number;
 }
+// put it into grout ca be reused in APP
 
 export default async function getPhotos(searchQuery: string, page: number):Promise <Photos> {
     
   
 // const response = await axios.get(`https://api.unsplash.com/search/photos`, {
-    const response = await axios.get("/search/photos", {
+    const response = await axios.get<UnsplashResponse>("/search/photos", {
         params: {
         client_id: API_KEY,
         query:searchQuery,
